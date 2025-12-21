@@ -26,57 +26,65 @@ LYVO is a premium iOS commitment tracking app that takes a fundamentally differe
 ## Project Structure
 ```
 LYVO/
-├── App/
-│   └── LYVOApp.swift                   # App entry point
-├── Core/
-│   ├── Models/
-│   │   ├── Commitment.swift            # Active commitment model
-│   │   ├── ArchivedCommitment.swift    # Archived commitment model
-│   │   ├── CommitDay.swift             # Daily completion record
-│   │   ├── CommitmentStats.swift       # Statistics model
-│   │   └── JournalEntry.swift          # Micro-journal entries
-│   ├── Services/
-│   │   ├── CommitmentService.swift     # Core business logic & persistence
-│   │   ├── NotificationService.swift   # Daily reminders
-│   │   ├── HapticService.swift         # Haptic feedback
-│   │   ├── PaywallService.swift        # Premium access management
-│   │   └── StoreKitService.swift       # StoreKit 2 implementation
-│   └── Extensions/
-│       └── Date+Extensions.swift
-├── Features/
-│   ├── Home/
-│   │   ├── HomeView.swift              # Root container
-│   │   ├── ActiveCommitmentView.swift  # Main ritual screen
-│   │   └── EmptyStateView.swift        # No commitment state
-│   ├── Commit/
-│   │   ├── CommitDotView.swift         # Breathing dot component
-│   │   └── CommitAnimationState.swift  # Animation coordination
-│   ├── Creation/
-│   │   ├── NewCommitmentView.swift     # Commitment creation
-│   │   └── CategoryPickerView.swift    # Category selection
-│   ├── Archive/
-│   │   ├── ArchiveView.swift           # Archived commitments list
-│   │   └── ArchivePaywallCard.swift    # Premium upsell for old entries
-│   ├── Journal/
-│   │   ├── JournalModalView.swift      # Micro-journaling modal
-│   │   ├── JournalTeaser.swift         # Post-ritual soft paywall
-│   │   └── JournalHistoryView.swift    # Journal entries list
-│   ├── Onboarding/
-│   │   └── OnboardingView.swift        # First-launch experience
-│   ├── Settings/
-│   │   └── SettingsView.swift          # App settings
-│   └── Paywall/
-│       └── PaywallView.swift           # Premium purchase screen
-├── DesignSystem/
-│   ├── CommitTheme.swift               # Colors, Typography, Spacing
-│   └── Components/
-│       ├── CommitButton.swift
-│       ├── ScaleButtonStyle.swift
-│       └── BreathingDot.swift
-└── Resources/
-    ├── Assets.xcassets
-    ├── Sounds/                         # Custom ritual sounds
-    └── LYVO_Products.storekit          # Local IAP testing
+├── smallgong.mp3                       # Ritual completion sound
+├── Storekit.storekit                   # Local IAP testing config
+├── commit.xcodeproj/                   # Xcode project
+└── commit/                             # Main source directory
+    ├── App/
+    │   └── CommitApp.swift             # App entry point
+    ├── Core/
+    │   ├── Models/
+    │   │   ├── Commitment.swift        # Active commitment model
+    │   │   ├── ArchivedCommitment.swift # Archived commitment model
+    │   │   ├── CommitDay.swift         # Daily completion record
+    │   │   ├── CommitmentCategory.swift # Category definitions
+    │   │   ├── CommitmentStats.swift   # Statistics calculations
+    │   │   └── MicroJournal.swift      # Journal entry model
+    │   ├── Services/
+    │   │   ├── CommitmentService.swift # Core business logic & persistence
+    │   │   ├── NotificationService.swift # Daily reminders
+    │   │   ├── HapticService.swift     # Haptic feedback
+    │   │   ├── PaywallService.swift    # Premium access management
+    │   │   ├── StoreKitService.swift   # StoreKit 2 purchases & restore
+    │   │   ├── SoundService.swift      # Audio playback
+    │   │   └── MicroJournalService.swift # Journal persistence
+    │   └── Extensions/
+    │       └── Date+Extensions.swift
+    ├── Features/
+    │   ├── Home/
+    │   │   ├── HomeView.swift          # Root container
+    │   │   ├── HomeViewModel.swift     # Home screen state management
+    │   │   ├── ActiveCommitmentView.swift # Main ritual screen
+    │   │   ├── EmptyStateView.swift    # No commitment state
+    │   │   ├── JournalTeaser.swift     # Post-ritual journal upsell
+    │   │   ├── SettingsView.swift      # App settings
+    │   │   └── OnboardingView.swift    # First-launch experience
+    │   ├── Commit/
+    │   │   ├── CommitDotView.swift     # Breathing dot component
+    │   │   └── CommitAnimationState.swift # Animation coordination
+    │   ├── Creation/
+    │   │   ├── NewCommitmentView.swift # Commitment creation
+    │   │   └── CategoryPickerView.swift # Category selection
+    │   ├── Archive/
+    │   │   └── ArchiveView.swift       # Archived commitments list
+    │   ├── Journal/
+    │   │   └── JournalListView.swift   # Journal entries history
+    │   └── Paywall/
+    │       ├── PaywallView.swift       # Premium purchase screen
+    │       └── ArchivePaywallCard.swift # Archive limit upsell
+    ├── DesignSystem/
+    │   ├── CommitTheme.swift           # Colors, Typography, Spacing
+    │   └── Components/
+    │       ├── CommitButton.swift      # Primary button component
+    │       ├── CommitTextField.swift   # Text input component
+    │       ├── CommitArchiveIcon.swift # Archive icon component
+    │       ├── FinishCommitmentModal.swift # Completion modal
+    │       └── MicroJournalModal.swift # Journal entry modal
+    └── Resources/
+        ├── Assets.xcassets/            # App icons & colors
+        ├── Info.plist                  # App configuration
+        ├── commit.entitlements         # App capabilities
+        └── LaunchScreen.storyboard     # Launch screen
 ```
 
 ## Key Features
@@ -89,9 +97,10 @@ LYVO/
 5. **30-Day Archive** - Rolling window of past commitments
 
 ### Premium ($19.99/year or $14.99 lifetime)
-1. **Micro-Journaling** - 40-60 character reflection after ritual
+1. **Micro-Journaling** - Capture thoughts after each daily ritual
 2. **Unlimited Archive** - Full commitment history
-3. **Multiple Reminders** - Morning, midday, evening trigger times
+3. **Trigger-Time Reminders** - Set reminders for challenging moments
+4. **Multiple Commitments** - Work on multiple identity goals (future)
 
 ## Design System
 
@@ -143,13 +152,19 @@ CommitTheme.Spacing.l               // Standard spacing (16pt)
 
 **Product IDs:**
 ```swift
-lyvo_premium_annual     // $19.99/year auto-renewable
-lyvo_premium_lifetime   // $14.99 non-consumable
+com.taylor.lyvo.annual   // $19.99/year auto-renewable
+com.taylor.lyvo.lifetime // $14.99 non-consumable
 ```
+
+**Implementation:**
+- `StoreKitService`: Handles product loading, purchases, and restoration
+- `PaywallService`: Manages premium state and integrates with StoreKitService
+- Transaction listener runs on app launch for subscription renewals/refunds
+- Premium status persisted to UserDefaults as backup
 
 **Local Testing:**
 1. Xcode → Edit Scheme → Run → Options
-2. Set StoreKit Configuration to `LYVO_Products.storekit`
+2. Set StoreKit Configuration to `Storekit.storekit`
 
 ## Notification System
 - Single daily reminder at user-preferred time
@@ -162,12 +177,16 @@ lyvo_premium_lifetime   // $14.99 non-consumable
 ```swift
 #if DEBUG
 // In PaywallService.swift
-static let DEBUG_BYPASS_PAYWALL = true  // Bypass paywall in debug
+static let DEBUG_BYPASS_PAYWALL = false  // Set to true to bypass paywall
 
 // In SettingsView - Developer section (DEBUG builds only)
 // - Premium toggle for testing
 // - Reset onboarding
 // - Clear all data
+
+// PaywallService debug helpers
+PaywallService.shared.debugSetPremium(true)   // Set premium status
+PaywallService.shared.debugTogglePremium()    // Toggle premium
 #endif
 ```
 
@@ -185,7 +204,7 @@ static let DEBUG_BYPASS_PAYWALL = true  // Bypass paywall in debug
 
 ## Current State
 - Phase 1 complete: Free version fully functional
-- StoreKit 2 integrated with real product IDs
+- StoreKit 2 fully integrated (purchases, restoration, transaction listening)
 - Onboarding flow complete with behavioral psychology foundations
 - Website built for App Store requirements (Privacy Policy, Terms, Support)
 - Ready for App Store submission
