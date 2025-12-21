@@ -1,7 +1,7 @@
 import Foundation
 
 extension Date {
-    /// Start of day for this date
+    /// Start of day for this date - test
     var startOfDay: Date {
         Calendar.current.startOfDay(for: self)
     }
