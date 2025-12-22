@@ -173,7 +173,9 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
             await checkAuthorizationStatus()
             return granted
         } catch {
+            #if DEBUG
             print("Error requesting notification authorization: \(error)")
+            #endif
             return false
         }
     }
@@ -216,16 +218,20 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
             // Schedule
             do {
                 try await center.add(request)
+                #if DEBUG
                 print("✓ Notification scheduled for \(time.hour ?? 9):\(String(format: "%02d", time.minute ?? 0))")
-                
+
                 // Log pending notifications for debugging
                 let pending = await center.pendingNotificationRequests()
                 print("📋 Pending notifications: \(pending.count)")
                 for notification in pending {
                     print("   - \(notification.identifier): \(notification.trigger?.description ?? "no trigger")")
                 }
+                #endif
             } catch {
+                #if DEBUG
                 print("Failed to schedule reminder: \(error.localizedDescription)")
+                #endif
             }
         }
     }
@@ -281,6 +287,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
             }
             
             // Log scheduled notifications
+            #if DEBUG
             let pending = await center.pendingNotificationRequests()
             print("📋 Scheduled \(pending.count) reminder(s)")
             for notification in pending {
@@ -290,6 +297,7 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
                     print("   - \(notification.identifier): \(hour):\(String(format: "%02d", minute))")
                 }
             }
+            #endif
         }
     }
     
@@ -320,10 +328,12 @@ final class NotificationService: NSObject, ObservableObject, UNUserNotificationC
         do {
             try await center.add(request)
         } catch {
+            #if DEBUG
             print("Failed to schedule reminder \(identifier): \(error.localizedDescription)")
+            #endif
         }
     }
-    
+
     // MARK: - Cancel Reminders
     
     func cancelAllReminders() {

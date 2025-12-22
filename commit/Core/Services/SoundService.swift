@@ -19,7 +19,9 @@ final class SoundService {
             try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
+            #if DEBUG
             print("Failed to configure audio session: \(error)")
+            #endif
         }
     }
     
@@ -27,7 +29,9 @@ final class SoundService {
     
     func playCompletionGong() {
         guard let url = Bundle.main.url(forResource: "smallgong", withExtension: "mp3") else {
+            #if DEBUG
             print("Could not find small gong.mp3 in bundle")
+            #endif
             return
         }
         
@@ -37,7 +41,9 @@ final class SoundService {
             audioPlayer?.prepareToPlay()
             audioPlayer?.play()
         } catch {
+            #if DEBUG
             print("Failed to play sound: \(error)")
+            #endif
         }
     }
     

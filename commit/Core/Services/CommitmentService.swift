@@ -46,7 +46,9 @@ final class CommitmentService: ObservableObject {
         await notifications.checkAuthorizationStatus()
         
         if notifications.isAuthorized && notifications.notificationsEnabled {
+            #if DEBUG
             print("🔄 Rescheduling notifications for active commitment")
+            #endif
             let isPremium = PaywallService.shared.hasAccess(to: .triggerTimeNotifications)
             notifications.scheduleAllReminders(
                 title: commitment.title,
@@ -116,7 +118,9 @@ final class CommitmentService: ObservableObject {
             components.hour = hour
             components.minute = minute
             if let reminderDate = calendar.date(from: components) {
+                #if DEBUG
                 print("📅 Setting preferred notification time to \(hour):\(String(format: "%02d", minute))")
+                #endif
                 // Update NotificationService with the chosen time
                 notifications.preferredTime = reminderDate
             }
@@ -124,22 +128,32 @@ final class CommitmentService: ObservableObject {
         
         // Schedule notification - this will request authorization if needed
         Task {
+            #if DEBUG
             print("🔔 Starting notification setup...")
+            #endif
             // Request authorization first
             if !notifications.isAuthorized {
+                #if DEBUG
                 print("🔐 Requesting notification authorization...")
+                #endif
                 let granted = await notifications.requestAuthorization()
                 if granted {
+                    #if DEBUG
                     print("✅ Authorization granted")
+                    #endif
                     // Enable notifications and schedule
                     notifications.notificationsEnabled = true
                     let isPremium = PaywallService.shared.hasAccess(to: .triggerTimeNotifications)
                     notifications.scheduleAllReminders(title: title, isPremium: isPremium)
                 } else {
+                    #if DEBUG
                     print("❌ Authorization denied")
+                    #endif
                 }
             } else {
+                #if DEBUG
                 print("✅ Already authorized")
+                #endif
                 // Already authorized, just enable and schedule
                 notifications.notificationsEnabled = true
                 let isPremium = PaywallService.shared.hasAccess(to: .triggerTimeNotifications)

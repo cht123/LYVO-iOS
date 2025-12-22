@@ -8,7 +8,7 @@ struct MicroJournalEntry: Identifiable, Codable, Equatable {
     let commitmentId: UUID
     
     /// Maximum characters allowed (enforced at UI level)
-    static let maxCharacters = 60
+    static let maxCharacters = 140
     static let minCharacters = 1
     
     init(
