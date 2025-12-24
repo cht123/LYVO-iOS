@@ -28,6 +28,9 @@ struct ActiveCommitmentView: View {
     @State private var showJournalModal = false
     @State private var showingJournalList = false
     @State private var showPaywall = false
+
+    // Post-ritual retap state
+    @State private var hasRetappedToday = false
     
     // Make commitment optional to prevent crash
     var commitment: Commitment? {
@@ -171,12 +174,20 @@ struct ActiveCommitmentView: View {
                             .transition(.opacity)
                     }
                     
-                    // Confirmation text
+                    // Confirmation text - crossfade between messages
                     if showConfirmationText {
-                        Text("See you tomorrow")
-                            .font(CommitTheme.Typography.callout)
-                            .foregroundColor(CommitTheme.Colors.whiteMedium)
-                            .transition(.opacity)
+                        ZStack {
+                            Text("See you tomorrow")
+                                .opacity(hasRetappedToday ? 0 : 1)
+
+                            Text("Return tomorrow to renew your commitment")
+                                .opacity(hasRetappedToday ? 1 : 0)
+                        }
+                        .font(CommitTheme.Typography.callout)
+                        .foregroundColor(CommitTheme.Colors.whiteMedium)
+                        .multilineTextAlignment(.center)
+                        .transition(.opacity)
+                        .animation(.easeInOut(duration: 0.6), value: hasRetappedToday)
                     }
                 }
                 .frame(height: 24)
@@ -387,6 +398,7 @@ struct ActiveCommitmentView: View {
         showJournalModal = false
         showAlreadyCommittedRipple = false
         showJournalTeaser = false
+        hasRetappedToday = false
         
         // Reset animation state - don't show streak until user commits today
         if !service.hasCommittedToday {
@@ -405,14 +417,19 @@ struct ActiveCommitmentView: View {
     
     private func handleCommitTap() {
         let haptics = HapticService()
-        
+
         // If already committed, show gentle ripple feedback
         if service.hasCommittedToday {
             haptics.warning()
-            
+
+            // On first retap, change the confirmation text
+            if !hasRetappedToday {
+                hasRetappedToday = true
+            }
+
             // Trigger the ripple animation
             showAlreadyCommittedRipple = true
-            
+
             // Reset after animation completes
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                 showAlreadyCommittedRipple = false
