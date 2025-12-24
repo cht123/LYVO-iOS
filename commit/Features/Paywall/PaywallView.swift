@@ -14,6 +14,11 @@ struct PaywallView: View {
     @ObservedObject var paywallService = PaywallService.shared
     @Environment(\.dismiss) private var dismiss
 
+    /// Annual subscription price for fine print
+    private var annualPriceString: String {
+        paywallService.storeKit.annualProduct?.displayPrice ?? "$19.99"
+    }
+
     var body: some View {
         ZStack {
             // Background
@@ -139,9 +144,20 @@ struct PaywallView: View {
                     }
                     .disabled(paywallService.isLoading)
                     .padding(.top, CommitTheme.Spacing.s)
+
+                    // Fine print
+                    VStack(spacing: 4) {
+                        Text("Payment charged to your Apple ID at time of purchase.")
+                        Text("Subscriptions auto-renew at \(annualPriceString)/year.")
+                        Text("Cancel anytime in Settings.")
+                    }
+                    .font(.system(size: 11))
+                    .foregroundColor(CommitTheme.Colors.whiteDim.opacity(0.7))
+                    .multilineTextAlignment(.center)
+                    .padding(.top, CommitTheme.Spacing.m)
                 }
                 .padding(.horizontal, CommitTheme.Spacing.xl)
-                .padding(.bottom, CommitTheme.Spacing.xxl)
+                .padding(.bottom, CommitTheme.Spacing.xl)
             }
 
             // Loading overlay
