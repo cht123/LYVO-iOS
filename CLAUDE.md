@@ -97,7 +97,7 @@ LYVO/
 5. **30-Day Archive** - Rolling window of past commitments
 
 ### Premium ($19.99/year or $14.99 lifetime)
-1. **Micro-Journaling** - Capture thoughts after each daily ritual
+1. **Micro-Journaling** - Capture thoughts after each daily ritual (140 char limit)
 2. **Unlimited Archive** - Full commitment history
 3. **Trigger-Time Reminders** - Set reminders for challenging moments
 4. **Multiple Commitments** - Work on multiple identity goals (future)
@@ -148,6 +148,11 @@ CommitTheme.Spacing.l               // Standard spacing (16pt)
 
 **Never do:** Post-onboarding paywall. The first commitment moment is sacred.
 
+**Fine Print (App Store Compliance):**
+- Payment charged to Apple ID disclosure
+- Auto-renewal terms with dynamic pricing from StoreKit
+- Cancel anytime notice
+
 ## StoreKit 2 Configuration
 
 **Product IDs:**
@@ -171,6 +176,15 @@ com.taylor.lyvo.lifetime // $14.99 non-consumable
 - Reschedules when commitment changes
 - Uses `UNUserNotificationCenter`
 - Premium: Multiple trigger times throughout day
+
+## Settings Page
+- Daily reminder toggle and time picker
+- Additional reminders (premium)
+- Premium status / upgrade button
+- Support & Legal section with external links:
+  - Support: https://lyvo-app.com/#support
+  - Privacy Policy: https://lyvo-app.com/#privacy
+  - Terms of Service: https://lyvo-app.com/#terms
 
 ## Debug Tools
 
@@ -196,6 +210,7 @@ PaywallService.shared.debugTogglePremium()    // Toggle premium
 - Streak number hidden until ritual completed each day
 - "You showed up" text resets at midnight
 - Archive deletion also removes journal entries
+- All print statements wrapped in `#if DEBUG` for clean release builds
 
 ## Git Conventions
 - Commit messages: imperative mood, concise summary
