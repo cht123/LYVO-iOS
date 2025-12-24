@@ -60,7 +60,7 @@ struct SettingsView: View {
                             Text("Reminder Time")
                                 .font(CommitTheme.Typography.bodyMedium)
                                 .foregroundColor(CommitTheme.Colors.white)
-                            
+
                             DatePicker(
                                 "",
                                 selection: $notificationService.preferredTime,
@@ -76,6 +76,7 @@ struct SettingsView: View {
                                 }
                             }
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(CommitTheme.Spacing.l)
                         .commitCardBackground()
                         .shadow(
