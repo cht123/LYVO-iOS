@@ -155,11 +155,14 @@ struct SettingsView: View {
                     }
                     .padding(.top, CommitTheme.Spacing.l)
                     
+                    // Legal & Support Section
+                    legalSection
+
                     // Debug Section (only in DEBUG builds)
                     #if DEBUG
                     debugSection
                     #endif
-                    
+
                     Spacer()
                 }
                 .padding(CommitTheme.Spacing.l)
@@ -369,8 +372,49 @@ struct SettingsView: View {
         )
     }
     
+    // MARK: - Legal Section
+
+    private var legalSection: some View {
+        VStack(alignment: .leading, spacing: CommitTheme.Spacing.m) {
+            Text("Support & Legal")
+                .font(CommitTheme.Typography.title2)
+                .foregroundColor(CommitTheme.Colors.white)
+
+            VStack(spacing: 0) {
+                // Support
+                LinkRow(
+                    icon: "questionmark.circle",
+                    title: "Support",
+                    url: "https://lyvo-app.com/#support"
+                )
+
+                Divider()
+                    .background(CommitTheme.Colors.white.opacity(0.1))
+
+                // Privacy Policy
+                LinkRow(
+                    icon: "hand.raised",
+                    title: "Privacy Policy",
+                    url: "https://lyvo-app.com/#privacy"
+                )
+
+                Divider()
+                    .background(CommitTheme.Colors.white.opacity(0.1))
+
+                // Terms of Service
+                LinkRow(
+                    icon: "doc.text",
+                    title: "Terms of Service",
+                    url: "https://lyvo-app.com/#terms"
+                )
+            }
+            .commitCardBackground()
+        }
+        .padding(.top, CommitTheme.Spacing.l)
+    }
+
     // MARK: - Helpers
-    
+
     private func handleToggleChange(_ enabled: Bool) {
         if enabled && !notificationService.isAuthorized {
             Task {
@@ -509,6 +553,43 @@ struct ReminderSlotRow: View {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return formatter.string(from: slot.time)
+    }
+}
+
+// MARK: - Link Row
+
+struct LinkRow: View {
+    let icon: String
+    let title: String
+    let url: String
+
+    var body: some View {
+        Button {
+            let haptics = HapticService()
+            haptics.selection()
+            if let url = URL(string: url) {
+                UIApplication.shared.open(url)
+            }
+        } label: {
+            HStack {
+                Image(systemName: icon)
+                    .font(.system(size: 16))
+                    .foregroundColor(CommitTheme.Colors.whiteMedium)
+                    .frame(width: 24)
+
+                Text(title)
+                    .font(CommitTheme.Typography.bodyMedium)
+                    .foregroundColor(CommitTheme.Colors.white)
+
+                Spacer()
+
+                Image(systemName: "arrow.up.forward")
+                    .font(.system(size: 12))
+                    .foregroundColor(CommitTheme.Colors.whiteDim)
+            }
+            .padding(CommitTheme.Spacing.l)
+        }
+        .buttonStyle(ScaleButtonStyle())
     }
 }
 
